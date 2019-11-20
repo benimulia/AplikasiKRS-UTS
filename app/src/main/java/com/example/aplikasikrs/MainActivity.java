@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, HomeAdmin.class);
                 startActivity(intent);
             }else {
-                Toast toast = Toast.makeText(getApplicationContext(),"Bukan Email UKDW",Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(getApplicationContext(),"Email tidak valid",Toast.LENGTH_SHORT);
                 toast.setMargin(100,100);
                 toast.show();
             }
