@@ -33,7 +33,11 @@ public class Dosen {
     @Expose
     private String id;
 
-    public Dosen(String id,String nidn, String namaDosen, String gelar, String email, String alamat, String foto) {
+    @SerializedName("nim_progmob")
+    @Expose
+    private String nim;
+
+    public Dosen(String nidn, String namaDosen, String gelar, String email, String alamat, String foto, String id, String nim) {
         this.nidn = nidn;
         this.namaDosen = namaDosen;
         this.gelar = gelar;
@@ -41,6 +45,7 @@ public class Dosen {
         this.alamat = alamat;
         this.foto = foto;
         this.id = id;
+        this.nim = nim;
     }
 
     public String getNidn() {
@@ -97,5 +102,13 @@ public class Dosen {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getNim() {
+        return nim;
+    }
+
+    public void setNim(String nim) {
+        this.nim = nim;
     }
 }

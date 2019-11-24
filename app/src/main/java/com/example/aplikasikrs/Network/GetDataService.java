@@ -11,18 +11,26 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface GetDataService {
 
+    @FormUrlEncoded
+    @POST("api/progmob/dosen/delete")
+    Call<Dosen> delete_dosen(
+        @Field("id") String id,
+        @Field("nim_progmob") String nim_progmob
+    );
+
     @GET("/api/progmob/dosen/{nim_progmob}")
     Call<ArrayList<Dosen>> getDosenAll(@Path("nim_progmob") String nim_progmob);
     //Call<List<Dosen>> getDosenAll(@Query("nim_progmob") String nim_progmob);
 
-    /*@FormUrlEncoded
+    @FormUrlEncoded
     @POST("/api/progmob/dosen/create")
-    Call<DefaultResult> insert_dosen(
+    Call<Dosen> insert_dosen(
             @Field("nama") String nama,
             @Field("nidn") String nidn,
             @Field("alamat") String alamat,
@@ -30,7 +38,20 @@ public interface GetDataService {
             @Field("gelar") String gelar,
             @Field("foto") String foto,
             @Field("nim_progmob") String nim_progmob
-    );*/
+    );
+
+    @FormUrlEncoded
+    @PUT("api/progmob/dosen/update")
+    Call<Dosen> update_dosen(
+            @Field("id") String id,
+            @Field("nama") String nama,
+            @Field("nidn") String nidn,
+            @Field("alamat") String alamat,
+            @Field("email") String email,
+            @Field("gelar") String gelar,
+            @Field("foto") String foto,
+            @Field("nim_progmob") String nim_progmob
+    );
 
     /*@FormUrlEncoded
     @POST("/si_mapping/api/user_login.php")

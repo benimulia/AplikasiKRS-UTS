@@ -21,68 +21,74 @@ import retrofit2.Response; //menghasilkan data JSON
 import com.example.aplikasikrs.Network.GetDataService;
 import com.example.aplikasikrs.Network.RetrofitClientInstance;
 
-public class CreateDosenActivity extends AppCompatActivity {
 
-    EditText edtNama, edtNidn, edtAlamat, edtEmail, edtGelar;
+public class EditDosenActivity extends AppCompatActivity {
+
+    EditText edtId, edtNama, edtNidn, edtAlamat, edtEmail, edtGelar;
+    Intent mIntent = getIntent();
     GetDataService service;
     ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_dosen);
+        setContentView(R.layout.activity_edit_dosen);
         this.setTitle("SI KRS - Hai Admin");
-//        Button btnDaftarKrs = (Button)findViewById(R.id.btnSimpanDosen);
-//        btnDaftarKrs.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(CreateDosenActivity.this, HomeAdmin.class);
-//                startActivity(intent);
-//            }
-//        });
 
-        Button btnSimpan = (Button)findViewById(R.id.btnSimpanDosen);
-        btnSimpan.setOnClickListener(new View.OnClickListener() {
+        Button btnEdit = (Button)findViewById(R.id.btnEditDosen);
+        btnEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(CreateDosenActivity.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(EditDosenActivity.this);
 
                 builder.setMessage("Apakah anda yakin untuk menyimpan?")
                         .setNegativeButton("No", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                    Toast.makeText(CreateDosenActivity.this, "Batal Simpan", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(EditDosenActivity.this, "Batal Update", Toast.LENGTH_SHORT).show();
                             }
                         })
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                requestInsertDosen();
+                                requestUpdateDosen();
                             }
                         });
 
                 AlertDialog dialog = builder.create(); dialog.show();
             }
         });
+
     }
 
-    private void requestInsertDosen(){
+    private void requestUpdateDosen(){
+        edtId = (EditText)findViewById(R.id.edtIdDosen);
         edtNama = (EditText)findViewById(R.id.edtNamaDsn);
         edtNidn = (EditText)findViewById(R.id.edtNidn);
         edtAlamat = (EditText)findViewById(R.id.edtAlamatDsn);
         edtEmail = (EditText)findViewById(R.id.edtEmailDsn);
         edtGelar = (EditText)findViewById(R.id.edtGelar);
+
+        edtId.setText(mIntent.getStringExtra("id"));
+        edtId.setTag(edtId.getKeyListener());
+        edtId.setKeyListener(null);
+        edtNama.setText(mIntent.getStringExtra("nama"));
+        edtNidn.setText(mIntent.getStringExtra("nidn"));
+        edtAlamat.setText(mIntent.getStringExtra("alamat"));
+        edtEmail.setText(mIntent.getStringExtra("email"));
+        edtGelar.setText(mIntent.getStringExtra("gelar"));
+
         service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
         progressDialog =  ProgressDialog.show(this, null, "Harap Tunggu...", true, false);
 
-        Call<Dosen> call =  service.insert_dosen(edtNama.getText().toString(),edtNidn.getText().toString(),
+        Call<Dosen> call =  service.update_dosen(edtId.getText().toString(),edtNama.getText().toString(),edtNidn.getText().toString(),
                 edtAlamat.getText().toString(),edtEmail.getText().toString(),edtGelar.getText().toString(),"https://picsum.photos/200",
                 "72170177");
         call.enqueue(new Callback<Dosen>() {
             @Override
             public void onResponse(Call<Dosen> call, Response<Dosen> response) {
                 progressDialog.dismiss();
-                Toast.makeText(CreateDosenActivity.this,"Berhasil Insert",Toast.LENGTH_LONG).show();
-                Intent refresh = new Intent(CreateDosenActivity.this, RecyclerViewDaftarDosen.class);
+                Toast.makeText(EditDosenActivity.this,"Berhasil Update",Toast.LENGTH_LONG).show();
+                Intent refresh = new Intent(EditDosenActivity.this, RecyclerViewDaftarDosen.class);
                 startActivity(refresh);
                 finish();
 
@@ -91,7 +97,7 @@ public class CreateDosenActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<Dosen> call, Throwable t) {
                 progressDialog.dismiss();
-                Toast.makeText(CreateDosenActivity.this,"Error cuy",Toast.LENGTH_SHORT);
+                Toast.makeText(EditDosenActivity.this,"Error cuy",Toast.LENGTH_SHORT);
             }
         });
     }
