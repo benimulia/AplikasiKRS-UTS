@@ -19,7 +19,7 @@ public interface GetDataService {
 
     @FormUrlEncoded
     @POST("api/progmob/dosen/delete")
-    Call<Dosen> delete_dosen(
+    Call<DefaultResult> delete_dosen(
         @Field("id") String id,
         @Field("nim_progmob") String nim_progmob
     );
@@ -30,7 +30,7 @@ public interface GetDataService {
 
     @FormUrlEncoded
     @POST("/api/progmob/dosen/create")
-    Call<Dosen> insert_dosen(
+    Call<DefaultResult> insert_dosen(
             @Field("nama") String nama,
             @Field("nidn") String nidn,
             @Field("alamat") String alamat,
@@ -41,8 +41,33 @@ public interface GetDataService {
     );
 
     @FormUrlEncoded
-    @PUT("api/progmob/dosen/update")
-    Call<Dosen> update_dosen(
+    @POST("/api/progmob/dosen/createfoto")
+    Call<DefaultResult> insert_dosen_foto(
+            @Field("nama") String nama,
+            @Field("nidn") String nidn,
+            @Field("alamat") String alamat,
+            @Field("email") String email,
+            @Field("gelar") String gelar,
+            @Field("foto") String foto,
+            @Field("nim_progmob") String nim_progmob
+    );
+
+    @FormUrlEncoded
+    @POST("api/progmob/dosen/update")
+    Call<DefaultResult> update_dosen(
+            @Field("id") String id,
+            @Field("nama") String nama,
+            @Field("nidn") String nidn,
+            @Field("alamat") String alamat,
+            @Field("email") String email,
+            @Field("gelar") String gelar,
+            @Field("foto") String foto,
+            @Field("nim_progmob") String nim_progmob
+    );
+
+    @FormUrlEncoded
+    @POST("api/progmob/dosen/updatewithfoto")
+    Call<DefaultResult> update_dosen_foto(
             @Field("id") String id,
             @Field("nama") String nama,
             @Field("nidn") String nidn,

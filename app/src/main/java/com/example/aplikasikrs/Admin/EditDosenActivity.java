@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.aplikasikrs.Admin.Model.Dosen;
+import com.example.aplikasikrs.Network.DefaultResult;
 import com.example.aplikasikrs.R;
 
 import retrofit2.Call;
@@ -80,12 +81,12 @@ public class EditDosenActivity extends AppCompatActivity {
         service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
         progressDialog =  ProgressDialog.show(this, null, "Harap Tunggu...", true, false);
 
-        Call<Dosen> call =  service.update_dosen(edtId.getText().toString(),edtNama.getText().toString(),edtNidn.getText().toString(),
+        Call<DefaultResult> call =  service.update_dosen(edtId.getText().toString(),edtNama.getText().toString(),edtNidn.getText().toString(),
                 edtAlamat.getText().toString(),edtEmail.getText().toString(),edtGelar.getText().toString(),"https://picsum.photos/200",
                 "72170177");
-        call.enqueue(new Callback<Dosen>() {
+        call.enqueue(new Callback<DefaultResult>() {
             @Override
-            public void onResponse(Call<Dosen> call, Response<Dosen> response) {
+            public void onResponse(Call<DefaultResult> call, Response<DefaultResult> response) {
                 progressDialog.dismiss();
                 Toast.makeText(EditDosenActivity.this,"Berhasil Update",Toast.LENGTH_LONG).show();
                 Intent refresh = new Intent(EditDosenActivity.this, RecyclerViewDaftarDosen.class);
@@ -95,7 +96,7 @@ public class EditDosenActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<Dosen> call, Throwable t) {
+            public void onFailure(Call<DefaultResult> call, Throwable t) {
                 progressDialog.dismiss();
                 Toast.makeText(EditDosenActivity.this,"Error cuy",Toast.LENGTH_SHORT);
             }

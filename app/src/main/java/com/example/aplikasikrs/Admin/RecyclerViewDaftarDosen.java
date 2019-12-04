@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.example.aplikasikrs.Admin.Adapter.DosenAdapter;
 import com.example.aplikasikrs.Admin.Model.Dosen;
 import com.example.aplikasikrs.MainActivity;
+import com.example.aplikasikrs.Network.DefaultResult;
 import com.example.aplikasikrs.R;
 
 import java.util.ArrayList;
@@ -57,6 +58,8 @@ public class RecyclerViewDaftarDosen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recycler_view_daftar_dosen);
         this.setTitle("SI KRS - Hai Admin");
+
+        recyclerView = (RecyclerView)findViewById(R.id.rvDosen);
         //tambahData();
         //addData
         progressDialog = new ProgressDialog(this);
@@ -70,7 +73,7 @@ public class RecyclerViewDaftarDosen extends AppCompatActivity {
             public void onResponse(Call<ArrayList<Dosen>> call, Response<ArrayList<Dosen>> response) {
                 progressDialog.dismiss();
 
-                recyclerView = findViewById(R.id.rvDosen);
+                dosenList = response.body();
                 dosenAdapter = new DosenAdapter(response.body());
 
                 RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(RecyclerViewDaftarDosen.this);
@@ -81,16 +84,59 @@ public class RecyclerViewDaftarDosen extends AppCompatActivity {
             @Override
             public void onFailure(Call<ArrayList<Dosen>> call, Throwable t) {
                 progressDialog.dismiss();
-                Toast.makeText(RecyclerViewDaftarDosen.this,"Login Gagal, Silahkan Coba Lagi",Toast.LENGTH_SHORT);
+                Toast.makeText(RecyclerViewDaftarDosen.this,"Error",Toast.LENGTH_SHORT);
             }
         });
 
-
-
+        registerForContextMenu(recyclerView);
 
     }
 
-   /* private void tambahData(){
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        Dosen dosen = dosenList.get(item.getGroupId());
+        if (item.getTitle()== "Ubah Data Dosen"){
+            Intent intent = new Intent(RecyclerViewDaftarDosen.this, CreateDosenActivity.class);
+            intent.putExtra("id_dosen",dosen.getId()); //(key, value) -> ketika manggil Dosen harus sama
+            intent.putExtra("nama",dosen.getNamaDosen());
+            intent.putExtra("nidn",dosen.getNidn());
+            intent.putExtra("alamat",dosen.getAlamat());
+            intent.putExtra("email",dosen.getEmail());
+            intent.putExtra("gelar",dosen.getGelar());
+            intent.putExtra("foto",dosen.getFoto());
+            intent.putExtra("is_update",true);
+            startActivity(intent);
+
+        }else if(item.getTitle() == "Hapus Data Dosen"){
+            //Toast.makeText(RecyclerViewDaftarDosen.this,"Hapus",Toast.LENGTH_LONG).show();
+
+            progressDialog = new ProgressDialog(RecyclerViewDaftarDosen.this);
+            progressDialog.show();
+
+            GetDataService service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
+            Call<DefaultResult> call = service.delete_dosen(
+                    dosen.getId(), "72170177");
+            call.enqueue(new Callback<DefaultResult>() {
+                @Override
+                public void onResponse(Call<DefaultResult> call, Response<DefaultResult> response) {
+                    progressDialog.dismiss();
+                    Toast.makeText(RecyclerViewDaftarDosen.this,"Berhasil Menghapus",Toast.LENGTH_SHORT).show();
+                    recreate();
+                }
+
+                @Override
+                public void onFailure(Call<DefaultResult> call, Throwable t) {
+                    progressDialog.dismiss();
+                    Toast.makeText(RecyclerViewDaftarDosen.this,"Gagal Hapus",Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+        return super.onContextItemSelected(item);
+    }
+
+    //Data Dummy
+    /* private void tambahData(){
         dosenList = new ArrayList<>();
         dosenList.add(new Dosen("001","77777","Jong Jek Siang", "Proffesor","jjs@staff.ukdw.ac.id","Jl. Magelang",R.drawable.logo));
         dosenList.add(new Dosen("001","77777","Jong Jek Siang", "Proffesor","jjs@staff.ukdw.ac.id","Jl. Magelang",R.drawable.logo));

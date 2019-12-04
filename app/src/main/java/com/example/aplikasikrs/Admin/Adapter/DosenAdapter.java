@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,13 +53,13 @@ public class DosenAdapter extends RecyclerView.Adapter<DosenAdapter.ViewHolder> 
         holder.imgFoto.getLayoutParams().height = 200;
         if(dataList.get(position).getFoto() != null){
             Picasso.with(this.context)
-                    .load(dataList.get(position).getFoto())
+                    .load("https://kpsi.fti.ukdw.ac.id/progmob/"+dataList.get(position).getFoto())
                     .into(holder.imgFoto);
         }
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
+        /*holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), EditDosenActivity.class);
+                Intent intent = new Intent(view.getContext(), CreateDosenActivity.class);
                 intent.putExtra("id",dataList.get(position).getId());
                 intent.putExtra("nama",dataList.get(position).getNamaDosen());
                 intent.putExtra("nidn",dataList.get(position).getNidn());
@@ -66,7 +67,7 @@ public class DosenAdapter extends RecyclerView.Adapter<DosenAdapter.ViewHolder> 
                 intent.putExtra("email",dataList.get(position).getEmail());
                 intent.putExtra("gelar",dataList.get(position).getGelar());
                 view.getContext().startActivity(intent);}
-        });
+        });*/
     }
 
     @Override
@@ -75,7 +76,8 @@ public class DosenAdapter extends RecyclerView.Adapter<DosenAdapter.ViewHolder> 
     }
 
 
-    public class ViewHolder extends RecyclerView.ViewHolder{ //utk menghubungkan dari txt
+    public class ViewHolder extends RecyclerView.ViewHolder
+            implements View.OnCreateContextMenuListener{ //utk menghubungkan dari txt
         private TextView txtNidn, txtNamaDosen, txtGelar, txtAlamat, txtEmail;
         private ImageView imgFoto;
         private CardView cv;
@@ -88,7 +90,15 @@ public class DosenAdapter extends RecyclerView.Adapter<DosenAdapter.ViewHolder> 
             txtAlamat = view.findViewById(R.id.txtAlamat);
             txtEmail = view.findViewById(R.id.txtEmail);
             imgFoto = view.findViewById(R.id.imgFotoDosen);
-            cv = view.findViewById(R.id.cardViewDosen);
+            //cv = view.findViewById(R.id.cardViewDosen);
+            view.setOnCreateContextMenuListener(this);
+        }
+
+        @Override
+        public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+            menu.setHeaderTitle("Pilih Aksi");
+            menu.add(this.getAdapterPosition(), v.getId(),0,"Ubah Data Dosen");
+            menu.add(this.getAdapterPosition(), v.getId(),0,"Hapus Data Dosen");
         }
     }
 }
